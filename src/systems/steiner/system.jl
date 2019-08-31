@@ -41,10 +41,7 @@ function Steiner()
     DP.@polyvar v[1:6, 1:5]
     F = vcat(map(i -> Incidence(f,a,g, v[:,i], y[:,i]), 1:5)...)
 
-    start_solutions_real = readdlm(joinpath(@__DIR__, "solutions_real.txt"), '\t', Float64, '\n')
-    start_solutions_imag = readdlm(joinpath(@__DIR__, "solutions_imag.txt"), '\t', Float64, '\n')
-    start_solutions = [[complex(start_solutions_real[i, j], start_solutions_imag[i,j]) for j=1:15] for i=1:3264]
-    start_parameters = readdlm(joinpath(@__DIR__, "parameters.txt"), '\t', ComplexF64)[:,1]
+    S, p = load_start_pairs(@__DIR__)
 
     Steiner(F, vec(v), start_solutions, start_parameters)
 end

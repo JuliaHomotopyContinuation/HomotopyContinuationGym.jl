@@ -1,5 +1,5 @@
 export load_start_pairs, save_start_pairs,
-    Steiner, Cyclooctane
+    TestSystem, Steiner, Cyclooctane, Bacillus
 
 abstract type TestSystem end
 
@@ -28,5 +28,18 @@ function save_start_pairs(directory, S, p)
     true
 end
 
+export system, parameters, start_solutions, start_parameters, nvariables, npolynomials, nparameters
+
+function system end
+parameters(::TestSystem) = nothing
+start_solutions(::TestSystem) = nothing
+start_parameters(::TestSystem) = nothing
+
+function nvariables end
+function npolynomials end
+nparameters(::TestSystem) = nothing
+
+
 include("systems/steiner/system.jl")
 include("systems/cyclooctane/system.jl")
+include("systems/bacillus/system.jl")

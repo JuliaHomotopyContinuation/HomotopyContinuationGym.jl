@@ -12,7 +12,8 @@ function Base.show(io::IO, F::Steiner)
     println(io, " ◯ variables → 15")
     println(io, " ◯ parameters → 30")
 end
-
+system(F::Steiner) = F.F
+parameters(F::Steiner) = F.parameters
 start_solutions(F::Steiner) = F.start_solutions
 start_parameters(F::Steiner) = F.start_parameters
 nvariables(::Steiner) = 15
@@ -43,5 +44,5 @@ function Steiner()
 
     S, p = load_start_pairs(@__DIR__)
 
-    Steiner(F, vec(v), start_solutions, start_parameters)
+    Steiner(F, vec(v), S, p)
 end

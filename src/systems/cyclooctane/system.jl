@@ -13,6 +13,8 @@ function Base.show(io::IO, F::Cyclooctane)
     println(io, " ◯ parameters → 36")
 end
 
+system(F::Cyclooctane) = F.F
+parameters(F::Cyclooctane) = F.parameters
 start_solutions(F::Cyclooctane) = F.start_solutions
 start_parameters(F::Cyclooctane) = F.start_parameters
 nvariables(::Cyclooctane) = 17

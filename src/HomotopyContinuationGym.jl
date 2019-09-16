@@ -4,6 +4,8 @@ using DelimitedFiles, LinearAlgebra, PrettyTables
 
 import DynamicPolynomials
 const DP = DynamicPolynomials
+import HomotopyContinuation
+const HC = HomotopyContinuation
 
 include("systems.jl")
 
@@ -23,7 +25,7 @@ struct PathInfo
     n_ldivs::Int
 end
 
-function path_info(tracker::CoreTracker, x₀, t₁, t₀)
+function path_info(tracker::HC.CoreTracker, x₀, t₁, t₀)
     state = tracker.state
 
     s = Float64[]
@@ -37,17 +39,20 @@ function path_info(tracker::CoreTracker, x₀, t₁, t₀)
     eval_err = Float64[]
 
     HC.init!(tracker, x₀, t₁, t₀)
+    first = true
     for _ in tracker
         push!(s, state.s)
         push!(Δs, state.Δs)
         push!(ω, state.ω)
-        push!(accepted_rejected, !state.last_step_failed)
+        !first && push!(accepted_rejected, !state.last_step_failed)
         push!(norm_x, maximum(abs, state.x))
         push!(cond, state.jacobian.cond[])
         push!(accuracy, state.accuracy)
         push!(residual, maximum(state.residual))
         push!(eval_err, maximum(state.eval_error))
+        first = false
     end
+    push!(accepted_rejected, !state.last_step_failed)
 
     PathInfo(
         s,

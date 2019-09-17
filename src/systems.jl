@@ -1,4 +1,4 @@
-export load_start_pairs, save_start_pairs,
+export load_start_pairs, save_start_pairs, sample_parameters,
     TestSystem, Steiner, Cyclooctane, Bacillus
 
 abstract type TestSystem end
@@ -38,6 +38,22 @@ start_parameters(::TestSystem) = nothing
 function nvariables end
 function npolynomials end
 nparameters(::TestSystem) = nothing
+
+"""
+    sample_parameters(sys::TestSystem, n=1, T=ComplexF64; seed=rand(100_000:999_999))
+
+Sample `n` parameter vectors of type `sys` from a normal distribution with a given `seed`.
+If `n == 1` a single vector is returned.
+Returns the vector of parameters vectors, and the used seed.
+"""
+function sample_parameters(sys::TestSystem, n=1, T=ComplexF64; seed=rand(100_000:999_999))
+    Random.seed!(seed)
+    if n == 1
+        (parameters = randn(T, nparameters(sys)), seed = seed)
+    else
+        (parameters = [randn(T, nparameters(sys)) for _ in 1:n], seed = seed)
+    end
+end
 
 
 include("systems/steiner/system.jl")

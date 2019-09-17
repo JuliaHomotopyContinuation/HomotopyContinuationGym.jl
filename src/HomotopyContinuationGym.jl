@@ -1,6 +1,8 @@
 module HomotopyContinuationGym
 
-using DelimitedFiles, LinearAlgebra, PrettyTables
+export PathInfo, path_info
+
+using DelimitedFiles, LinearAlgebra, PrettyTables, Random
 
 import DynamicPolynomials
 const DP = DynamicPolynomials
@@ -39,12 +41,21 @@ function path_info(tracker::HC.CoreTracker, x₀, t₁, t₀)
     eval_err = Float64[]
 
     HC.init!(tracker, x₀, t₁, t₀)
+    push!(s, state.s)
+    push!(Δs, state.Δs)
+    push!(ω, state.ω)
+    push!(norm_x, maximum(abs, state.x))
+    push!(cond, state.jacobian.cond[])
+    push!(accuracy, state.accuracy)
+    push!(residual, maximum(state.residual))
+    push!(eval_err, maximum(state.eval_error))
+
     first = true
     for _ in tracker
+        push!(accepted_rejected, !state.last_step_failed)
         push!(s, state.s)
         push!(Δs, state.Δs)
         push!(ω, state.ω)
-        !first && push!(accepted_rejected, !state.last_step_failed)
         push!(norm_x, maximum(abs, state.x))
         push!(cond, state.jacobian.cond[])
         push!(accuracy, state.accuracy)

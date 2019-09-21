@@ -5,4 +5,6 @@ using HomotopyContinuationGym, Test
     @testset "Systems" begin
         @test Steiner() isa TestSystem
         @test Cyclooctane() isa TestSystem
+        @test FourBar() isa TestSystem
+    end
 end

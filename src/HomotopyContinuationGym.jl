@@ -2,7 +2,7 @@ module HomotopyContinuationGym
 
 export PathInfo, path_info
 
-using DelimitedFiles, LinearAlgebra, PrettyTables, Random
+using DelimitedFiles, LinearAlgebra, PrettyTables, Random, Printf
 
 import DynamicPolynomials
 const DP = DynamicPolynomials
@@ -98,18 +98,20 @@ function path_table(io::IO, info::PathInfo)
     h1 = Highlighter(f = (data, i, j) -> j == 1 && data[i, 1] == :✗, crayon = crayon"red")
     h2 = Highlighter(f = (data, i, j) -> j == 1 && data[i, 1] == :✓, crayon = crayon"green")
     ✓✗ = map(v -> v ? :✓ : :✗, info.accepted_rejected)
+    sigdigits3(x) = @sprintf("%.3g", x)
+    sigdigits2(x) = @sprintf("%.2g", x)
     data = hcat(
         ✓✗,
-        round.(info.s, sigdigits = 3),
-        round.(info.Δs, sigdigits = 3),
-        round.(info.ω, sigdigits = 3),
-        round.(info.Δx₀, sigdigits = 2),
-        round.(info.accuracy, sigdigits = 2),
-        round.(info.cond, sigdigits = 3),
-        round.(info.eval_err, sigdigits = 2),
-        round.(info.limit_accuracy, sigdigits = 2),
-        round.(info.norm_x, sigdigits = 3),
-        round.(info.residual, sigdigits = 2),
+        sigdigits3.(info.s),
+        sigdigits3.(info.Δs),
+        sigdigits3.(info.ω),
+        sigdigits2.(info.Δx₀),
+        sigdigits2.(info.accuracy),
+        sigdigits3.(info.cond),
+        sigdigits2.(info.eval_err),
+        sigdigits2.(info.limit_accuracy),
+        sigdigits3.(info.norm_x),
+        sigdigits2.(info.residual),
     )
     pretty_table(io, data, header, crop = :none, highlighters = (h1, h2))
 end

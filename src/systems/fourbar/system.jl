@@ -23,8 +23,8 @@ npolynomials(::FourBar) = 24
 nparameters(::FourBar) = 16
 
 function FourBar()
-    @polyvar x a y b x̂ â ŷ b̂
-    @polyvar γ[1:8] γ̂[1:8] δ[1:8] δ̂[1:8]
+    DP.@polyvar x a y b x̂ â ŷ b̂
+    DP.@polyvar γ[1:8] γ̂[1:8] δ[1:8] δ̂[1:8]
     #system of polynomials
     D1 = [(â * x - δ̂[i] * x) * γ[i] + (a * x̂ - δ[i] * x̂) * γ̂[i] + (â - x̂) * δ[i] +
           (a - x) * δ̂[i] - δ[i] * δ̂[i] for i = 1:8]
@@ -32,9 +32,9 @@ function FourBar()
           (b - y) * δ̂[i] - δ[i] * δ̂[i] for i = 1:8]
     D3 = [γ[i] * γ̂[i] + γ[i] + γ̂[i] for i = 1:8]
     F = [D1; D2; D3]
-    vars = [[x, a, y, b, x̂, â, ŷ, b̂]; γ; γ̂]
+    params = [δ; δ̂]
 
     S, p = load_start_pairs(@__DIR__)
 
-    FourBar(F, vars, S, p)
+    FourBar(F, params, S, p)
 end

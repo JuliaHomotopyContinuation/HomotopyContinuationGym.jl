@@ -181,8 +181,8 @@ function path_info(tracker::HC.PathTracker, x₀, t₀=nothing)
         HC.init!(tracker, x₀)
     end
 
-    push!(s, ct_state.s)
-    push!(Δs, ct_state.Δs)
+    push!(s, real(HC.current_t(ct_state)))
+    push!(Δs, real(HC.current_Δt(ct_state)))
     push!(ω, ct_state.ω)
     push!(Δx₀, ct_state.norm_Δx₀)
     push!(norm_x, maximum(abs, ct_state.x))
@@ -196,8 +196,8 @@ function path_info(tracker::HC.PathTracker, x₀, t₀=nothing)
     first = true
     for _ in tracker
         push!(accepted_rejected, !ct_state.last_step_failed)
-        push!(s, ct_state.s)
-        push!(Δs, ct_state.Δs)
+        push!(s, real(HC.current_t(ct_state)))
+        push!(Δs, real(HC.current_Δt(ct_state)))
         push!(ω, ct_state.ω)
         push!(Δx₀, ct_state.norm_Δx₀)
         push!(norm_x, maximum(abs, ct_state.x))
